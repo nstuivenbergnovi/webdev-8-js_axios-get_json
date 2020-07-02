@@ -8,7 +8,7 @@
 <h1>Werken met JSON</h1>
 <h2>Voor als we tijd over hebben</h2>
 <p>In deze opdracht wordt met de Axios library een <em>get</em>-call gedaan naar de ergast api. Deze API bevat zeer veel
-informatie over formule 1. In dit geval worden alle coureurs van het jaar 2019 opgehaald (2020 staat er nog niet in).
+    informatie over formule 1. In dit geval worden alle coureurs van het jaar 2019 opgehaald (2020 staat er nog niet in).
 </p>
 <p>Het is aan jou om de volgende punten te proberen.</p>
 <ul>
@@ -33,6 +33,10 @@ informatie over formule 1. In dit geval worden alle coureurs van het jaar 2019 o
 <hr>
 <p id="drivers"></p>
 
+<ul id="driversList">
+
+</ul>
+
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -40,30 +44,47 @@ informatie over formule 1. In dit geval worden alle coureurs van het jaar 2019 o
      * Met de AXIOS-library kun je versimpelde HTTP requests maken. Daarnaast maakt Axios het makkelijker om errors
      * af te vangen en deze te 'verwerken.'
      */
+    let jsonResponse;
+
     axios.get('http://ergast.com/api/f1/2019/drivers.json')
         .then((response) => {
             // `data` is the response that was provided by the server
-            console.log(response.data);
+            //console.log(response.data);
+            jsonResponse = response.data;
+            let driverList = jsonResponse.MRData.DriverTable.Drivers;
+            let liElements = "";
+            for (let i = 0; i < driverList.length; i++) {
+                let volledigeNaam = driverList[i].givenName + " " + driverList[i].familyName;
+                liElements += createLiElement(volledigeNaam);
+            }
+            document.getElementById("driversList").innerHTML = liElements;
+
+            //console.log(jsonResponse);
             // `status` is the HTTP status code from the server response
-            console.log(response.status);
+            //console.log(response.status);
             // `statusText` is the HTTP status message from the server response
-            console.log(response.statusText);
+            //console.log(response.statusText);
             // `headers` the headers that the server responded with
             // All header names are lower cased
-            console.log(response.headers);
+            //console.log(response.headers);
             // `config` is the config that was provided to `axios` for the request
-            console.log(response.config);
+            //console.log(response.config);
 
             // Je kunt dit uitcommentariëren om het hele JSON-String te zien.
             //document.getElementById("drivers").innerHTML = JSON.stringify(response.data);
         })
-    .catch(function(error) {
-        console.log("Dit is de error:");
-        console.log(error);
-    })
-    .then(function() {
-        //Stel dat je iets wilt doen wanneer alles geladen is, dan doe je dat hier.
-    });
+        .catch(function(error) {
+            //console.log("Dit is de error:");
+            //console.log(error);
+        })
+        .then(function() {
+            //Stel dat je iets wilt doen wanneer alles geladen is, dan doe je dat hier.
+        });
+
+
+    function createLiElement(inhoud) {
+        return "<li>" + inhoud + "</li>";
+    }
 
 </script>
 </body>
